@@ -55,8 +55,14 @@ Gera `artifacts/demo/D1_sucesso.json` … `D4_degradado.json` (normal, incomplet
 
 ### 4. Interface Gradio (Inicialização Rápida)
 
-Você pode iniciar toda a aplicação com o script PowerShell:
+Você pode iniciar toda a aplicação de forma automatizada:
 
+**No Windows (Prompt de comando ou duplo clique):**
+```cmd
+.\start.bat
+```
+
+**No PowerShell:**
 ```powershell
 # Iniciar via Docker (padrão)
 .\start.ps1
@@ -65,8 +71,7 @@ Você pode iniciar toda a aplicação com o script PowerShell:
 .\start.ps1 -Mode local
 ```
 
-Ou diretamente via Python:
-
+**Diretamente via Python:**
 ```text
 python scripts/app.py
 ```
@@ -88,6 +93,13 @@ Ou utilizando **Docker Compose**:
 ```text
 docker compose up --build
 ```
+
+> **Dica de Troubleshooting (Porta 7860 já em uso):**  
+> Se receber `Bind for 0.0.0.0:7860 failed: port is already allocated`, significa que um contêiner anterior ou processo Python ainda está usando a porta. Para liberar:
+> ```cmd
+> docker stop guardiana-ai-app && docker rm guardiana-ai-app
+> ```
+> Ou passe outra porta: `.\start.ps1 -Port 7861`
 
 Executar a **demonstração em lote CLI** (4 cenários no terminal):
 
