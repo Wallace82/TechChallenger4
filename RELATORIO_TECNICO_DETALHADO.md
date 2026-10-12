@@ -461,26 +461,26 @@ O projeto entrega um assistente clínico funcional ponta-a-ponta, com fine-tunin
 4. **Análise de disparidade por subgrupo demográfico** com dados anotados
 5. **Feedback humano** integrado (DPO ou RLHF leve)
 6. **Métricas adicionais**: precisão clínica formal por painel de especialistas, F1 em classificação de urgência
-7. **Deployment**: substituir Colab+Gradio por API FastAPI containerizada + UI React; PostgreSQL + pgvector no lugar de SQLite + Chroma
+7. **Deployment de produção**: evolução do container Docker atual para cluster orquestrado com API REST e banco PostgreSQL em nuvem
 
 ---
 
-## Anexo A — Resumo Quantitativo
+## Anexo A — Resumo Quantitativo (Evolução Fases 3 & 5)
 
-| Métrica | Valor |
-|---|---|
-| Documentos fonte | 39 PDFs |
-| Chunks indexados | 1.392 |
-| Pares Q&A gerados | 6.414 |
-| Split train/val/test | 5.134 / 640 / 640 |
-| Tempo geração dataset | ~6-8h (A100) |
-| Tempo treino QLoRA | ~2.5h (A100) |
-| Tamanho adapter | ~30-50 MB |
-| Pacientes mock | 50 |
-| Tabelas SQLite | 7 (incluindo log_acesso) |
-| Tools LangChain | 9 |
-| Workflows LangGraph | 4 |
-| Categorias clínicas | 5 (2 sensitive) |
+| Métrica | Fase 3 (Base) | Fase 5 (Atual) |
+|---|---|---|
+| Documentos fonte | 39 PDFs | 39 PDFs |
+| Chunks indexados | 1.392 | 1.392 (+ subset local JSON para CPU) |
+| Pares Q&A gerados | 6.414 | 6.414 |
+| Dataset tabular de ML | — | 8.000 amostras (24 features, parquet) |
+| Modelo preditivo ML | — | Regressão Logística (PR-AUC 0,590) |
+| Pacientes mock | 50 | 50 (Faker pt_BR) |
+| Tabelas SQLite | 7 | **8** (+ `predicoes_ml` para auditoria) |
+| Tools LangChain | 9 | **10** (+ `predizer_risco_gestacional`) |
+| Workflows LangGraph | 4 | **5** (+ `risco_ml` com 4 caminhos) |
+| Abas na Interface Gradio | 5 | **6** (+ Aba de Risco Gestacional ML) |
+| Containerização | — | `Dockerfile`, `docker-compose.yml`, `start.ps1`, `start.bat` |
+| Categorias clínicas | 5 | 5 |
 
 ---
 

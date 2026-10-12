@@ -53,7 +53,19 @@ python scripts/run_demo.py
 
 Gera `artifacts/demo/D1_sucesso.json` … `D4_degradado.json` (normal, incompleto, bypass de emergência, degradado) com `retrieved_sources` e `doc_id` do subset RAG.
 
-### 4. Interface Gradio
+### 4. Interface Gradio (Inicialização Rápida)
+
+Você pode iniciar toda a aplicação com o script PowerShell:
+
+```powershell
+# Iniciar via Docker (padrão)
+.\start.ps1
+
+# Ou iniciar em ambiente Python local
+.\start.ps1 -Mode local
+```
+
+Ou diretamente via Python:
 
 ```text
 python scripts/app.py
@@ -63,20 +75,33 @@ Abra **http://localhost:7860**. Título: **Guardiã AI**. Seis abas; na sidebar 
 
 ### 5. Docker
 
-CLI (quatro cenários, como no log de evidência):
+Executar a **aplicação completa (Gradio UI)** via Docker:
 
 ```text
-docker build -t techchallenger4-demo:cpu .
-docker run --rm techchallenger4-demo:cpu
+docker build -t techchallenger4 .
+docker run -p 7860:7860 techchallenger4
 ```
+Acesse a aplicação no navegador em **http://localhost:7860**.
 
-UI no browser (`app.py` na porta 7860):
+Ou utilizando **Docker Compose**:
 
 ```text
 docker compose up --build
 ```
 
-A imagem **não** carrega Llama. Detalhes: [`docs/deploy/EXECUCAO_DOCKER.md`](docs/deploy/EXECUCAO_DOCKER.md).
+Executar a **demonstração em lote CLI** (4 cenários no terminal):
+
+```text
+docker run --rm techchallenger4 python scripts/run_demo.py
+```
+
+Executar a **suíte de testes** dentro do contêiner:
+
+```text
+docker run --rm techchallenger4 pytest
+```
+
+A imagem utiliza o perfil `demo-cpu` (`FakeChatModel`, scikit-learn e RAG lexical). Detalhes e logs em [`docs/deploy/EXECUCAO_DOCKER.md`](docs/deploy/EXECUCAO_DOCKER.md).
 
 ### 6. Relatório HTML / PDF
 

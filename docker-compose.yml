@@ -1,12 +1,17 @@
 services:
   demo:
     build: .
+    container_name: guardiana-ai-app
     ports:
       - "7860:7860"
     environment:
       PERFIL_EXECUCAO: demo-cpu
-      HOSPITAL_DB_PATH: /app/artifacts/demo/hospital.db
+      ML_RISCO_HABILITADO: "1"
+      HOSPITAL_DB_PATH: /app/artifacts/demo/hospital_ui.db
       ARTIFACTS_DIR: /app/artifacts
+      PORT: "7860"
     volumes:
       - ./artifacts:/app/artifacts
     command: ["python", "scripts/app.py"]
+    restart: unless-stopped
+

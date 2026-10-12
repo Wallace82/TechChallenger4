@@ -91,9 +91,10 @@ A ferramenta `buscar_protocolo` e o nó RAG de `risco_ml` usam o mesmo retriever
 
 - 10 tools LangChain (inclui `predizer_risco_gestacional`)
 - 5 grafos LangGraph (Triagem, Violência, Obstétrico, Prevenção, `risco_ml`)
-- 6 abas Gradio (título **Guardiã AI**)
-- SQLite: tabelas da Fase 3 + `predicoes_ml` (hash de features, sem payload clínico em claro)
-- Docker `demo-cpu`: sklearn + FakeChatModel, sem Llama
+- 6 abas Gradio (título **Guardiã AI**, acessível em http://localhost:7860)
+- SQLite: 8 tabelas (incluindo `predicoes_ml` para auditoria com hash de features)
+- Docker: imagem `demo-cpu` com `CMD ["python", "scripts/app.py"]`, healthcheck HTTP e compose
+- Scripts de automação: `start.ps1` (PowerShell) e `start.bat` (Windows) para inicialização rápida
 
 ```mermaid
 flowchart TB
@@ -103,8 +104,8 @@ flowchart TB
   Agent --> Tools[10_StructuredTools]
   WFs --> Tools
   Tools --> RAG[RAG_local_ou_Chroma]
-  Tools --> DB[(SQLite)]
-  WFs --> ML[lib_ml]
+  Tools --> DB[(SQLite_8_tabelas)]
+  WFs --> ML[lib_ml_RegressaoLogistica]
   Agent --> LLM[FakeChat_ou_Llama]
   WFs --> LLM
 ```
@@ -124,11 +125,11 @@ flowchart TB
 
 | Item | Estado |
 |---|---|
-| Git + README | este repositório |
-| UI | Gradio, `python scripts/app.py` |
-| Dockerfile | perfil `demo-cpu` |
-| Relatório técnico | este arquivo + HTML |
-| Vídeo ≤ 15 min | **pendente** (humano) |
+| Git + README | este repositório com guias de execução local e Docker |
+| UI | Gradio, `python scripts/app.py` (6 abas completas) |
+| Dockerfile & Compose | perfil `demo-cpu` com entrypoint na UI e scripts `start.ps1` / `start.bat` |
+| Relatório técnico | este arquivo + HTML exportado |
+| Vídeo ≤ 15 min | **pendente** (humano, roteiro em `ROTEIRO_VIDEO.md`) |
 | RAG com citação | subset CPU + Chroma no Colab |
 
 ---
@@ -142,8 +143,21 @@ flowchart TB
 
 ---
 
-## Anexo — Como reproduzir no CPU
+## Anexo — Como reproduzir
 
+### Via Docker (Containerizado)
+```text
+docker compose up --build
+# ou via script auxiliar no Windows:
+.\start.bat
+# ou no PowerShell:
+.\start.ps1
+```
+Acesse a aplicação em **http://localhost:7860**.
+
+*(Nota: caso a porta 7860 já esteja em uso por outra instância, encerre o processo anterior ou altere a variável `PORT`)*
+
+### Execução Local (Python)
 ```text
 pip install -r requirements.txt -r requirements-ml.txt
 python scripts/train.py --verificar-dataset
