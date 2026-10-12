@@ -134,9 +134,10 @@
 <ul>
 <li>10 tools LangChain (inclui <code>predizer_risco_gestacional</code>)</li>
 <li>5 grafos LangGraph (Triagem, Violência, Obstétrico, Prevenção, <code>risco_ml</code>)</li>
-<li>6 abas Gradio (título <strong>Guardiã AI</strong>)</li>
-<li>SQLite: tabelas da Fase 3 + <code>predicoes_ml</code> (hash de features, sem payload clínico em claro)</li>
-<li>Docker <code>demo-cpu</code>: sklearn + FakeChatModel, sem Llama</li>
+<li>6 abas Gradio (título <strong>Guardiã AI</strong>, acessível em http://localhost:7860)</li>
+<li>SQLite: 8 tabelas (incluindo <code>predicoes_ml</code> para auditoria com hash de features)</li>
+<li>Docker: imagem <code>demo-cpu</code> com <code>CMD ["python", "scripts/app.py"]</code>, healthcheck HTTP e compose</li>
+<li>Scripts de automação: <code>start.ps1</code> (PowerShell) e <code>start.bat</code> (Windows) para inicialização rápida</li>
 </ul>
 <pre><code class="language-mermaid">flowchart TB
   UI[Gradio_Guardia_AI]
@@ -145,8 +146,8 @@
   Agent --&gt; Tools[10_StructuredTools]
   WFs --&gt; Tools
   Tools --&gt; RAG[RAG_local_ou_Chroma]
-  Tools --&gt; DB[(SQLite)]
-  WFs --&gt; ML[lib_ml]
+  Tools --&gt; DB[(SQLite_8_tabelas)]
+  WFs --&gt; ML[lib_ml_RegressaoLogistica]
   Agent --&gt; LLM[FakeChat_ou_Llama]
   WFs --&gt; LLM
 </code></pre>
@@ -162,11 +163,11 @@
 <h2>9. Entregáveis do enunciado</h2>
 <p>| Item | Estado |
 |---|---|
-| Git + README | este repositório |
-| UI | Gradio, <code>python scripts/app.py</code> |
-| Dockerfile | perfil <code>demo-cpu</code> |
-| Relatório técnico | este arquivo + HTML |
-| Vídeo ≤ 15 min | <strong>pendente</strong> (humano) |
+| Git + README | este repositório com guias de execução local e Docker |
+| UI | Gradio, <code>python scripts/app.py</code> (6 abas completas) |
+| Dockerfile &amp; Compose | perfil <code>demo-cpu</code> com entrypoint na UI e scripts <code>start.ps1</code> / <code>start.bat</code> |
+| Relatório técnico | este arquivo + HTML exportado |
+| Vídeo ≤ 15 min | <strong>pendente</strong> (humano, roteiro em <code>ROTEIRO_VIDEO.md</code>) |
 | RAG com citação | subset CPU + Chroma no Colab |</p>
 <hr />
 <h2>10. Limitações</h2>
@@ -177,7 +178,17 @@
 <li><code>pip-audit</code> documentado, pins não alteradas.</li>
 </ol>
 <hr />
-<h2>Anexo — Como reproduzir no CPU</h2>
+<h2>Anexo — Como reproduzir</h2>
+<h3>Via Docker (Containerizado)</h3>
+<pre><code class="language-text">docker compose up --build
+# ou via script auxiliar no Windows:
+.\start.bat
+# ou no PowerShell:
+.\start.ps1
+</code></pre>
+<p>Acesse a aplicação em <strong>http://localhost:7860</strong>.</p>
+<p><em>(Nota: caso a porta 7860 já esteja em uso por outra instância, encerre o processo anterior ou altere a variável <code>PORT</code>)</em></p>
+<h3>Execução Local (Python)</h3>
 <pre><code class="language-text">pip install -r requirements.txt -r requirements-ml.txt
 python scripts/train.py --verificar-dataset
 python -m pytest -q
